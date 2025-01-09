@@ -40,6 +40,7 @@ fun MainScreen() {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             var username by remember { mutableStateOf("") }
             var showGreeting by remember { mutableStateOf(false) }
+            var currentGreeting by remember { mutableStateOf("") }
 
             Column(
                 modifier = Modifier
@@ -49,13 +50,19 @@ fun MainScreen() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 UserInput(
-                    name = name,
-                    onNameChange = { name = it }
+                    name = username,
+                    onNameChange = { username = it },
+                    modifier = Modifier
+                        .testTag("nameInput")
                 )
 
                 Button(
                     onClick = {
                         if (username.isNotBlank()) {
+                            currentGreeting = username
+                            showGreeting = true
+                        }
+                        else{
                             showGreeting = false
                         }
                     },
@@ -67,11 +74,12 @@ fun MainScreen() {
                 }
 
                 if (showGreeting) {
-                    Greeeting(
-                        name = username,
+                    Greeting(
+                        name = currentGreeting,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 16.dp)
+                            .testTag("newGreeting")
                     )
 
                 }
@@ -88,17 +96,17 @@ fun UserInput(name: String, onNameChange: (String) -> Unit, modifier: Modifier =
         label = { Text("Enter your Name") },
         modifier = modifier
             .fillMaxWidth()
-            .testTag("UserInput")
+            .testTag("userInput")
     )
 }
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $username!, Welcome to InF2007!",
+        text = "Hello $name!, Welcome to INF2007!",
         modifier = Modifier
             .fillMaxWidth()
-            .testTag("greeting")
+            .testTag("greetingMsg")
     )
 }
 
